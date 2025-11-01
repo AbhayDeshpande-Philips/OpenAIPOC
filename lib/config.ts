@@ -12,6 +12,6 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
   },
 ];
 
-export const PLACEHOLDER_INPUT = "Explore grooming articles...";
+export const PLACEHOLDER_INPUT = "test.";
 
 export const GREETING = "How can I help you today?";
