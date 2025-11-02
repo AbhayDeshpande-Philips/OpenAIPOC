@@ -1,8 +1,12 @@
+# netlify.toml (Corrected Version)
+
 [build]
   # Next.js build command
   command = "next build"
 
-[functions]
+# Configure general function settings within the [build.functions] table
+# This is the standard way to set global function parameters
+[build.functions]
   # Set the timeout for your Node.js serverless function (your API route)
   timeout = 15
   # Use the faster bundler for functions
