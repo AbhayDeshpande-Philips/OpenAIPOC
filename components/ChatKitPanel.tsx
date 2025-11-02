@@ -346,9 +346,15 @@ export function ChatKitPanel({
         className={
           // 🚨 CHANGE IS HERE: Only hide if there is a fatal error.
           // Let the ErrorOverlay handle the loading state visualization.
-          blockingError 
-            ? "pointer-events-none opacity-0"
-            : "block h-full w-full"
+          // 🚨 CHANGE IS HERE: Only hide if there is a fatal error.
+          // Let the ErrorOverlay handle the loading state visualization.
+          (() => {
+            if (blockingError) {
+              console.log('[ChatKitPanel] Hiding component due to blockingError:', blockingError);
+              return "pointer-events-none opacity-0";
+            }
+            return "block h-full w-full";
+          })()
         }
       />
       <ErrorOverlay
