@@ -347,17 +347,20 @@ export function ChatKitPanel({
         key={widgetInstanceKey}
         control={chatkit.control}
         className={
-          blockingError || isInitializingSession
+          // 🚨 CHANGE IS HERE: Only hide if there is a fatal error.
+          // Let the ErrorOverlay handle the loading state visualization.
+          blockingError 
             ? "pointer-events-none opacity-0"
             : "block h-full w-full"
         }
       />
       <ErrorOverlay
         error={blockingError}
+        // Show "Loading" message when no blocking error exists but session is initializing.
         fallbackMessage={
-          blockingError || !isInitializingSession
+          blockingError || !isInitializingSession 
             ? null
-            : "Loading assistant session..."
+            : "Loading assistant session..." 
         }
         onRetry={blockingError && errors.retryable ? handleResetChat : null}
         retryLabel="Restart chat"
