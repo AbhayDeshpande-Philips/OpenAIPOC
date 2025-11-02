@@ -19,26 +19,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: [
-              // 1. Must be listed first or separated by semicolons
-              "default-src 'self';",
-              
-              // 2. ADD style-src BACK to allow React/Next.js inline styles
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
-              
-              // 3. Script sources (includes 'unsafe-inline' for now)
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.platform.openai.com;",
-              
-              // 4. Frames (OpenAI component)
-              "frame-src 'self' https://cdn.platform.openai.com;",
-              
-              // 5. API connections (DEBUGGING - VERY PERMISSIVE)
-              "connect-src *;",
-              
-              // 6. Image sources (required for data: and blob: image URLs)
-              "img-src 'self' data: blob: https://*;",
-
-            ].join('; '), // CRITICAL CHANGE: JOIN WITH SEMICOLON AND SPACE
+            value: "connect-src *;", // DEBUGGING: Allow all connections
           },
         ],
       },

@@ -178,6 +178,14 @@ export function ChatKitPanel({
       }
 
       try {
+        console.log('[ChatKitPanel] Attempting canary fetch...');
+        try {
+          const canary = await fetch('https://jsonplaceholder.typicode.com/todos/1');
+          console.log(`[ChatKitPanel] Canary fetch successful: ${canary.ok}`);
+        } catch (e) {
+          console.error('[ChatKitPanel] Canary fetch FAILED:', e);
+        }
+
         const response = await fetch(CREATE_SESSION_ENDPOINT, {
           method: "POST",
           headers: {
