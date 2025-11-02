@@ -61,6 +61,7 @@ export function ChatKitPanel({
   const [widgetInstanceKey, setWidgetInstanceKey] = useState(0);
 
   const setErrorState = useCallback((updates: Partial<ErrorState>) => {
+    console.log("[ChatKitPanel] Updating error state:", updates);
     setErrors((current) => ({ ...current, ...updates }));
   }, []);
 
@@ -132,7 +133,6 @@ export function ChatKitPanel({
   const isWorkflowConfigured = Boolean(
     WORKFLOW_ID && !WORKFLOW_ID.startsWith("wf_replace")
   );
-  console.log(`[ChatKitPanel] Workflow configured: ${isWorkflowConfigured}, WORKFLOW_ID: ${WORKFLOW_ID}`);
 
   useEffect(() => {
     if (!isWorkflowConfigured && isMountedRef.current) {
@@ -158,7 +158,7 @@ export function ChatKitPanel({
 
   const getClientSecret = useCallback(
     async (currentSecret: string | null) => {
-      console.log('[ChatKitPanel] getClientSecret called.');
+      console.log("[ChatKitPanel] getClientSecret called.");
 
       if (!isWorkflowConfigured) {
         const detail =
@@ -317,6 +317,7 @@ export function ChatKitPanel({
       processedFacts.current.clear();
     },
     onError: ({ error }: { error: unknown }) => {
+      console.error("[ChatKitPanel] ChatKit reported an error via onError callback:", error);
       // Note that Chatkit UI handles errors for your users.
       // Thus, your app code doesn't need to display errors on UI.
       console.error("ChatKit error", error);
@@ -325,6 +326,7 @@ export function ChatKitPanel({
 
   const activeError = errors.session ?? errors.integration;
   const blockingError = errors.script ?? activeError;
+  console.log('[ChatKitPanel] Final render state:', { isInitializingSession, blockingError, errors, scriptStatus });
 
   if (isDev) {
     console.debug("[ChatKitPanel] render state", {

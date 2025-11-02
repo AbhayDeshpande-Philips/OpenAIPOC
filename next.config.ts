@@ -32,8 +32,8 @@ const nextConfig: NextConfig = {
               // 4. Frames (OpenAI component)
               "frame-src 'self' https://cdn.platform.openai.com;",
               
-              // 5. API connections (OpenAI APIs)
-              "connect-src 'self' https://api.openai.com https://cdn.platform.openai.com;",
+              // 5. API connections (OpenAI APIs & Netlify Functions)
+              "connect-src 'self' https://api.openai.com https://cdn.platform.openai.com https://spiffy-bubblegum-0a46fa.netlify.app/.netlify/functions/;",
               
               // 6. Image sources (required for data: and blob: image URLs)
               "img-src 'self' data: blob: https://*; ",
