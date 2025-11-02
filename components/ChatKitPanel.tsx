@@ -60,12 +60,7 @@ export function ChatKitPanel({
   const [widgetInstanceKey, setWidgetInstanceKey] = useState(0);
 
   const setErrorState = useCallback((updates: Partial<ErrorState>) => {
-    console.log('%cDEBUG: Updating error state with:', 'color: orange', updates);
-    setErrors((current) => {
-      const newState = { ...current, ...updates };
-      console.log('%cDEBUG: New error state:', 'color: orange', newState);
-      return newState;
-    });
+    setErrors((current) => ({ ...current, ...updates }));
   }, []);
 
   useEffect(() => {
@@ -174,13 +169,10 @@ export function ChatKitPanel({
 
       if (isMountedRef.current) {
         if (!currentSecret) {
-          console.log('%cDEBUG: Initializing session...', 'color: blue');
           setIsInitializingSession(true);
         }
         setErrorState({ session: null, integration: null, retryable: false });
       }
-      console.log('%cDEBUG: getClientSecret called.', 'color: blue');
-      await new Promise(resolve => setTimeout(resolve, 2000));
 
       try {
         const response = await fetch(CREATE_SESSION_ENDPOINT, {
@@ -229,9 +221,7 @@ export function ChatKitPanel({
 
         return clientSecret;
       } catch (error) {
-        console.log('%cDEBUG: getClientSecret caught an error.', 'color: red');
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        const detail =
+                const detail =
           error instanceof Error
             ? error.message
             : "Unable to start ChatKit session.";
@@ -240,9 +230,7 @@ export function ChatKitPanel({
         }
                 throw error instanceof Error ? error : new Error(detail);
       } finally {
-        console.log('%cDEBUG: getClientSecret finally block.', 'color: gray');
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        if (isMountedRef.current && !currentSecret) {
+                if (isMountedRef.current && !currentSecret) {
           setIsInitializingSession(false);
         }
       }
@@ -307,11 +295,9 @@ export function ChatKitPanel({
       return { success: false };
     },
     onResponseEnd: () => {
-      console.log('%cDEBUG: onResponseEnd called.', 'color: green');
       onResponseEnd();
     },
     onResponseStart: () => {
-      console.log('%cDEBUG: onResponseStart called.', 'color: green');
       setErrorState({ integration: null, retryable: false });
     },
     onThreadChange: () => {
@@ -324,8 +310,6 @@ export function ChatKitPanel({
 
   const activeError = errors.session ?? errors.integration;
   const blockingError = errors.script ?? activeError;
-  console.log('%cDEBUG: Rendering with blockingError:', 'color: purple', blockingError);
-  console.log('%cDEBUG: Rendering with isInitializingSession:', 'color: purple', isInitializingSession);
 
   return (
     <div className="relative flex h-[90vh] w-full flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
