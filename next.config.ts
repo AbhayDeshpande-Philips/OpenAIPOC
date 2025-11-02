@@ -32,11 +32,11 @@ const nextConfig: NextConfig = {
               // 4. Frames (OpenAI component)
               "frame-src 'self' https://cdn.platform.openai.com;",
               
-              // 5. API connections (OpenAI APIs & Netlify Functions)
-              "connect-src 'self' https://api.openai.com https://cdn.platform.openai.com https://*.netlify.app;",
+              // 5. API connections (DEBUGGING - VERY PERMISSIVE)
+              "connect-src *;",
               
               // 6. Image sources (required for data: and blob: image URLs)
-              "img-src 'self' data: blob: https://*; ",
+              "img-src 'self' data: blob: https://*;",
 
             ].join('; '), // CRITICAL CHANGE: JOIN WITH SEMICOLON AND SPACE
           },
