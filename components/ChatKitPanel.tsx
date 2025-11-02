@@ -226,6 +226,8 @@ export function ChatKitPanel({
         if (isMountedRef.current) {
           setErrorState({ session: detail, retryable: false });
         }
+        // HACK: Add a 10-second delay for debugging.
+        await new Promise(resolve => setTimeout(resolve, 10000));
         throw error instanceof Error ? error : new Error(detail);
       } finally {
         if (isMountedRef.current && !currentSecret) {
