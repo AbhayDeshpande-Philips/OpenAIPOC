@@ -1,15 +1,11 @@
-# netlify.toml (Final, Corrected Structure)
+# netlify.toml (Cleaned Version)
 
 [build]
   # Next.js build command
   command = "next build"
 
-# 🛑 CORRECT PLACE FOR GLOBAL FUNCTION CONFIGURATION 🛑
-[functions]
-  # Set the timeout for your Node.js serverless function (your API route)
-  timeout = 15
-  # Use the faster bundler for functions
-  node_bundler = "esbuild"
+# 🛑 REMOVE THE [functions] BLOCK ENTIRELY 🛑
+# We will set the timeout using an environment variable instead.
 
 # Explicitly use the Netlify Next.js Build Plugin
 [[plugins]]
