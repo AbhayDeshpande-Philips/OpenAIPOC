@@ -14,3 +14,5 @@ export const STARTER_PROMPTS: StartScreenPrompt[] = [
 export const PLACEHOLDER_INPUT = "test.";
 
 export const GREETING = "How can I help you today?";
+
+export const CREATE_SESSION_ENDPOINT = "/api/create-session";
