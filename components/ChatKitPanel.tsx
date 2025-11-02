@@ -188,14 +188,6 @@ export function ChatKitPanel({
 
         const raw = await response.text();
 
-        if (isDev) {
-          console.info("[ChatKitPanel] createSession response", {
-            status: response.status,
-            ok: response.ok,
-            bodyPreview: raw.slice(0, 1600),
-          });
-        }
-
         let data: Record<string, unknown> = {};
         if (raw) {
           try {
@@ -278,9 +270,6 @@ export function ChatKitPanel({
       if (invocation.name === "switch_theme") {
         const requested = invocation.params.theme;
         if (requested === "light" || requested === "dark") {
-          if (isDev) {
-            console.debug("[ChatKitPanel] switch_theme", requested);
-          }
           onThemeRequest(requested);
           return { success: true };
         }
@@ -314,24 +303,12 @@ export function ChatKitPanel({
       processedFacts.current.clear();
     },
     onError: ({ error }: { error: unknown }) => {
-      // Note that Chatkit UI handles errors for your users.
-      // Thus, your app code doesn't need to display errors on UI.
       console.error("ChatKit error", error);
     },
   });
 
   const activeError = errors.session ?? errors.integration;
   const blockingError = errors.script ?? activeError;
-
-  if (isDev) {
-    console.debug("[ChatKitPanel] render state", {
-      isInitializingSession,
-      hasControl: Boolean(chatkit.control),
-      scriptStatus,
-      hasError: Boolean(blockingError),
-      workflowId: WORKFLOW_ID,
-    });
-  }
 
   return (
     <div className="relative flex h-[90vh] w-full flex-col overflow-hidden bg-white shadow-sm transition-colors dark:bg-slate-900">
@@ -341,15 +318,9 @@ export function ChatKitPanel({
         className={
           // 🚨 CHANGE IS HERE: Only hide if there is a fatal error.
           // Let the ErrorOverlay handle the loading state visualization.
-          // 🚨 CHANGE IS HERE: Only hide if there is a fatal error.
-          // Let the ErrorOverlay handle the loading state visualization.
-          (() => {
-            if (blockingError) {
-              console.log('[ChatKitPanel] Hiding component due to blockingError:', blockingError);
-              return "pointer-events-none opacity-0";
-            }
-            return "block h-full w-full";
-          })()
+          blockingError 
+            ? "pointer-events-none opacity-0"
+            : "block h-full w-full"
         }
       />
       <ErrorOverlay

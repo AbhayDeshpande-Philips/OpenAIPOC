@@ -35,13 +35,6 @@ export async function POST(request: Request): Promise<Response> {
     const resolvedWorkflowId =
       parsedBody?.workflow?.id ?? parsedBody?.workflowId ?? WORKFLOW_ID;
 
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[create-session] handling request", {
-        resolvedWorkflowId,
-        body: JSON.stringify(parsedBody),
-      });
-    }
-
     if (!resolvedWorkflowId) {
       return buildJsonResponse(
         { error: "Missing workflow id" },
@@ -66,23 +59,12 @@ export async function POST(request: Request): Promise<Response> {
       }),
     });
 
-
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[create-session] upstream response", {
-        status: upstreamResponse.status,
-        statusText: upstreamResponse.statusText,
-      });
-    }
-
     const upstreamJson = (await upstreamResponse.json().catch(() => ({}))) as
       | Record<string, unknown>
       | undefined;
 
     if (!upstreamResponse.ok) {
       const upstreamError = extractUpstreamError(upstreamJson);
-      console.error("OpenAI ChatKit session creation failed", {
-        status: upstreamResponse.status,
-        statusText: upstreamResponse.statusText,
         body: upstreamJson,
       });
       return buildJsonResponse(
