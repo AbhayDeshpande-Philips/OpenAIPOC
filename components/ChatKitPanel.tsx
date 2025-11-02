@@ -132,6 +132,7 @@ export function ChatKitPanel({
   const isWorkflowConfigured = Boolean(
     WORKFLOW_ID && !WORKFLOW_ID.startsWith("wf_replace")
   );
+  console.log(`[ChatKitPanel] Workflow configured: ${isWorkflowConfigured}, WORKFLOW_ID: ${WORKFLOW_ID}`);
 
   useEffect(() => {
     if (!isWorkflowConfigured && isMountedRef.current) {
@@ -157,13 +158,7 @@ export function ChatKitPanel({
 
   const getClientSecret = useCallback(
     async (currentSecret: string | null) => {
-      if (isDev) {
-        console.info("[ChatKitPanel] getClientSecret invoked", {
-          currentSecretPresent: Boolean(currentSecret),
-          workflowId: WORKFLOW_ID,
-          endpoint: CREATE_SESSION_ENDPOINT,
-        });
-      }
+      console.log('[ChatKitPanel] getClientSecret called.');
 
       if (!isWorkflowConfigured) {
         const detail =
@@ -235,7 +230,7 @@ export function ChatKitPanel({
 
         return clientSecret;
       } catch (error) {
-        console.error("Failed to create ChatKit session", error);
+        console.error("[ChatKitPanel] Error in getClientSecret:", error);
         const detail =
           error instanceof Error
             ? error.message
