@@ -61,7 +61,6 @@ export function ChatKitPanel({
   const [widgetInstanceKey, setWidgetInstanceKey] = useState(0);
 
   const setErrorState = useCallback((updates: Partial<ErrorState>) => {
-    console.log("[ChatKitPanel] Updating error state:", updates);
     setErrors((current) => ({ ...current, ...updates }));
   }, []);
 
@@ -158,7 +157,6 @@ export function ChatKitPanel({
 
   const getClientSecret = useCallback(
     async (currentSecret: string | null) => {
-      console.log("[ChatKitPanel] getClientSecret called.");
 
       if (!isWorkflowConfigured) {
         const detail =
@@ -178,14 +176,6 @@ export function ChatKitPanel({
       }
 
       try {
-        console.log('[ChatKitPanel] Attempting canary fetch...');
-        try {
-          const canary = await fetch('https://jsonplaceholder.typicode.com/todos/1');
-          console.log(`[ChatKitPanel] Canary fetch successful: ${canary.ok}`);
-        } catch (e) {
-          console.error('[ChatKitPanel] Canary fetch FAILED:', e);
-        }
-
         const response = await fetch(CREATE_SESSION_ENDPOINT, {
           method: "POST",
           headers: {
@@ -238,7 +228,6 @@ export function ChatKitPanel({
 
         return clientSecret;
       } catch (error) {
-        console.error("[ChatKitPanel] Error in getClientSecret:", error);
         const detail =
           error instanceof Error
             ? error.message
@@ -325,7 +314,6 @@ export function ChatKitPanel({
       processedFacts.current.clear();
     },
     onError: ({ error }: { error: unknown }) => {
-      console.error("[ChatKitPanel] ChatKit reported an error via onError callback:", error);
       // Note that Chatkit UI handles errors for your users.
       // Thus, your app code doesn't need to display errors on UI.
       console.error("ChatKit error", error);
@@ -334,7 +322,6 @@ export function ChatKitPanel({
 
   const activeError = errors.session ?? errors.integration;
   const blockingError = errors.script ?? activeError;
-  console.log('[ChatKitPanel] Final render state:', { isInitializingSession, blockingError, errors, scriptStatus });
 
   if (isDev) {
     console.debug("[ChatKitPanel] render state", {

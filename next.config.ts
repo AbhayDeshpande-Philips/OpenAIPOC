@@ -3,6 +3,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  output: 'standalone',
   webpack: (config) => {
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
@@ -19,7 +20,15 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "connect-src *;", // DEBUGGING: Allow all connections
+            value: [
+              "default-src 'self';",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.platform.openai.com;",
+              "frame-src 'self' https://cdn.platform.openai.com;",
+              "connect-src 'self' https://api.openai.com https://cdn.platform.openai.com https://*.netlify.app;",
+              "img-src 'self' data: blob: https://*;
+,
+            ].join('; '),
           },
         ],
       },
