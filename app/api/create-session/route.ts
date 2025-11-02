@@ -13,12 +13,14 @@ const SESSION_COOKIE_NAME = "chatkit_session_id";
 const SESSION_COOKIE_MAX_AGE = 60 * 60 * 24 * 30; // 30 days
 
 export async function POST(request: Request): Promise<Response> {
+  console.log("[create-session] Received request.");
   if (request.method !== "POST") {
     return methodNotAllowedResponse();
   }
   let sessionCookie: string | null = null;
   try {
     const openaiApiKey = process.env.OPENAI_API_KEY;
+    console.log(`[create-session] OPENAI_API_KEY is ${openaiApiKey ? 'present' : 'missing'}.`);
     if (!openaiApiKey) {
       return new Response(
         JSON.stringify({ error: "Missing OPENAI_API_KEY environment variable" }),
@@ -35,12 +37,11 @@ export async function POST(request: Request): Promise<Response> {
     const resolvedWorkflowId =
       parsedBody?.workflow?.id ?? parsedBody?.workflowId ?? WORKFLOW_ID;
 
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[create-session] handling request", {
-        resolvedWorkflowId,
-        body: JSON.stringify(parsedBody),
-      });
-    }
+    console.log("[create-session] Handling request", {
+      resolvedWorkflowId,
+      userId,
+      hasSessionCookie: !!sessionCookie,
+    });
 
     if (!resolvedWorkflowId) {
       return buildJsonResponse(
@@ -66,16 +67,15 @@ export async function POST(request: Request): Promise<Response> {
       }),
     });
 
-    if (process.env.NODE_ENV !== "production") {
-      console.info("[create-session] upstream response", {
-        status: upstreamResponse.status,
-        statusText: upstreamResponse.statusText,
-      });
-    }
 
-    const upstreamJson = (await upstreamResponse.json().catch(() => ({}))) as
-      | Record<string, unknown>
-      | undefined;
+    const responseText = await upstreamResponse.text();
+    console.log("[create-session] Upstream response received", {
+      status: upstreamResponse.status,
+      statusText: upstreamResponse.statusText,
+      body: responseText,
+    });
+
+    const upstreamJson = responseText ? (JSON.parse(responseText) as Record<string, unknown>) : {};
 
     if (!upstreamResponse.ok) {
       const upstreamError = extractUpstreamError(upstreamJson);
@@ -109,7 +109,7 @@ export async function POST(request: Request): Promise<Response> {
       sessionCookie
     );
   } catch (error) {
-    console.error("Create session error", error);
+    console.error("[create-session] Unexpected error in handler:", error);
     return buildJsonResponse(
       { error: "Unexpected error" },
       500,

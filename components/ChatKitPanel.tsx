@@ -129,13 +129,9 @@ export function ChatKitPanel({
     };
   }, [scriptStatus, setErrorState]);
 
-  console.log('[ChatKitPanel] WORKFLOW_ID:', WORKFLOW_ID);
-
   const isWorkflowConfigured = Boolean(
     WORKFLOW_ID && !WORKFLOW_ID.startsWith("wf_replace")
   );
-
-  console.log('[ChatKitPanel] isWorkflowConfigured:', isWorkflowConfigured);
 
   useEffect(() => {
     if (!isWorkflowConfigured && isMountedRef.current) {
@@ -161,16 +157,17 @@ export function ChatKitPanel({
 
   const getClientSecret = useCallback(
     async (currentSecret: string | null) => {
-      console.info("[ChatKitPanel] getClientSecret invoked", {
-        currentSecretPresent: Boolean(currentSecret),
-        workflowId: WORKFLOW_ID,
-        endpoint: CREATE_SESSION_ENDPOINT,
-      });
+      if (isDev) {
+        console.info("[ChatKitPanel] getClientSecret invoked", {
+          currentSecretPresent: Boolean(currentSecret),
+          workflowId: WORKFLOW_ID,
+          endpoint: CREATE_SESSION_ENDPOINT,
+        });
+      }
 
       if (!isWorkflowConfigured) {
         const detail =
           "Set NEXT_PUBLIC_CHATKIT_WORKFLOW_ID in your .env.local file.";
-        console.error('[ChatKitPanel] getClientSecret error:', detail);
         if (isMountedRef.current) {
           setErrorState({ session: detail, retryable: false });
           setIsInitializingSession(false);
